@@ -7,9 +7,9 @@ import json
 class KeywordDetector:
     def __init__(self, hotword="ok citroen"):
         # Charger le modèle français (à télécharger préalablement)
-        self.model = Model("./mon_env/vosk-model-small-fr-0.22")
+        self.model = Model("./venv/vosk-model-small-fr-0.22/vosk-model-small-fr-0.22")
         self.recognizer = KaldiRecognizer(self.model, 16000)
-        self.hotword = self.normalize(hotword)        
+        self.hotword = self.normalize(hotword)
 
         self.audio = pyaudio.PyAudio()
         self.stream = self.audio.open(
@@ -34,8 +34,10 @@ class KeywordDetector:
 
             if self.recognizer.AcceptWaveform(data):
                 result = json.loads(self.recognizer.Result())
+                print(f"result = {result}")
                 text = self.normalize(result.get("text", "").lower())
-                
+                print(text)
+
                 if self.hotword in text:
                     print("Mot clé détecté !")
                     return True
